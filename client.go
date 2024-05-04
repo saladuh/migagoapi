@@ -74,11 +74,11 @@ func (c *Client) Post(ctx context.Context, path string, json_body []byte) ([]byt
 }
 
 func (c *Client) Put(ctx context.Context, path string, json_body []byte) ([]byte, error) {
-	return c.commonMethod(ctx, path, bytes.NewBuffer(json_body), http.MethodGet)
+	return c.commonMethod(ctx, path, bytes.NewBuffer(json_body), http.MethodPut)
 }
 
 func (c *Client) Delete(ctx context.Context, path string) ([]byte, error) {
-	return c.commonMethod(ctx, path, http.NoBody, http.MethodGet)
+	return c.commonMethod(ctx, path, http.NoBody, http.MethodDelete)
 }
 
 func (c *Client) commonMethod(

@@ -66,68 +66,19 @@ func NewClient(user, token, endpoint, domain *string, timeout *time.Duration) (*
 }
 
 func (c *Client) Get(ctx context.Context, path string) ([]byte, error) {
-	url := fmt.Sprintf("%s/domains/%s/%s", c.Endpoint, c.Domain, path)
-
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, http.NoBody)
-	if err != nil {
-		return nil, err
-	}
-	body, err := c.doReq(req)
-
-	if err != nil {
-		return nil, err
-	}
-	return body, nil
+	return c.commonMethod(ctx, path, http.NoBody, http.MethodGet)
 }
 
 func (c *Client) Post(ctx context.Context, path string, json_body []byte) ([]byte, error) {
-	url := fmt.Sprintf("%s/domains/%s/%s", c.Endpoint, c.Domain, path)
-
-	req, err := http.NewRequestWithContext(
-		ctx, http.MethodPost, url, bytes.NewBuffer(json_body),
-	)
-	if err != nil {
-		return nil, err
-	}
-	body, err := c.doReq(req)
-
-	if err != nil {
-		return nil, err
-	}
-	return body, nil
+	return c.commonMethod(ctx, path, bytes.NewBuffer(json_body), http.MethodPost)
 }
 
 func (c *Client) Put(ctx context.Context, path string, json_body []byte) ([]byte, error) {
-	url := fmt.Sprintf("%s/domains/%s/%s", c.Endpoint, c.Domain, path)
-
-	req, err := http.NewRequestWithContext(
-		ctx, http.MethodPut, url, bytes.NewBuffer(json_body),
-	)
-	if err != nil {
-		return nil, err
-	}
-	body, err := c.doReq(req)
-
-	if err != nil {
-		return nil, err
-	}
-	return body, nil
+	return c.commonMethod(ctx, path, bytes.NewBuffer(json_body), http.MethodGet)
 }
 
 func (c *Client) Delete(ctx context.Context, path string) ([]byte, error) {
-	url := fmt.Sprintf("%s/domains/%s/%s", c.Endpoint, c.Domain, path)
-
-	req, err := http.NewRequestWithContext(ctx, http.MethodDelete, url, http.NoBody)
-
-	if err != nil {
-		return nil, err
-	}
-	body, err := c.doReq(req)
-
-	if err != nil {
-		return nil, err
-	}
-	return body, nil
+	return c.commonMethod(ctx, path, http.NoBody, http.MethodGet)
 }
 
 func (c *Client) commonMethod(

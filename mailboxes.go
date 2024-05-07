@@ -1,7 +1,9 @@
 package migagoapi
 
 import (
+	"context"
 	"encoding/json"
+	"fmt"
 	"time"
 )
 
@@ -53,4 +55,92 @@ type Mailbox struct {
 	FooterPlainBody       string    `json:"footer_plain_body,omitempty"`
 	FooterHTMLBody        string    `json:"footer_html_body,omitempty"`
 	Identities            []string  `json:"identities,omitempty"`
+}
+
+// Get all mailboxes on the domain associated with the client
+func (c *Client) GetMailboxes(ctx context.Context) (*[]Mailbox, error) {
+	var mailboxes struct {
+		Mailboxes []Mailbox `json:"mailboxes,omitempty"`
+	}
+
+	body, err := c.Get(ctx, "mailboxes")
+	if err != nil {
+		return nil, fmt.Errorf("GetMailboxes: %w", err)
+	}
+
+	err = json.Unmarshal(body, &mailboxes)
+	if err != nil {
+		return nil, fmt.Errorf("GetMailboxes: %w", err)
+	}
+
+	return &mailboxes.Mailboxes, nil
+}
+
+// Get mailbox local_part at domain associated with the client
+func (c *Client) GetMailbox(ctx context.Context, local_part string) (*Mailbox, error) {
+	var mailbox Mailbox
+
+	url_slug := fmt.Sprintf("mailboxes/%s", local_part)
+
+	body, err := c.Get(ctx, url_slug)
+	if err != nil {
+		return nil, fmt.Errorf("GetMailbox: %w", err)
+	}
+
+	err = json.Unmarshal(body, &mailbox)
+	if err != nil {
+		return nil, fmt.Errorf("GetMailbox: %w", err)
+	}
+
+	return &mailbox, nil
+}
+
+// Create mailbox using Mailbox object
+func (c *Client) CreateMailbox(ctx context.Context, new_mailbox *Mailbox) (*Mailbox, error) {
+	var mailbox Mailbox
+
+	mailbox_body, err := json.Marshal(new_mailbox)
+	if err != nil {
+		return nil, fmt.Errorf("CreateMailbox: %w", err)
+	}
+
+	body, err := c.Post(ctx, "mailboxes", mailbox_body)
+	if err != nil {
+		return nil, fmt.Errorf("CreateMailbox: %w", err)
+	}
+
+	err = json.Unmarshal(body, &mailbox)
+	if err != nil {
+		return nil, fmt.Errorf("CreateMailbox: %w", err)
+	}
+
+	return &mailbox, nil
+}
+
+// Convience function to create a mailbox with a password set
+func (c *Client) CreateMailboxWithPassword(
+	ctx context.Context, name, local_part, password string, is_internal bool) (*Mailbox, error) {
+
+	new_mailbox := Mailbox{
+		Name:       name,
+		LocalPart:  local_part,
+		Password:   password,
+		IsInternal: is_internal,
+	}
+
+	return c.CreateMailbox(ctx, &new_mailbox)
+}
+
+// Convience function to create a mailbox that sets the password via invitation link
+func (c *Client) CreateMailboxWithInvite(
+	ctx context.Context, name, local_part, password_recovery_email string,
+	is_internal bool) (*Mailbox, error) {
+	new_mailbox := Mailbox{
+		Name:                  name,
+		LocalPart:             local_part,
+		PasswordMethod:        "invitation",
+		PasswordRecoveryEmail: password_recovery_email,
+	}
+
+	return c.CreateMailbox(ctx, &new_mailbox)
 }

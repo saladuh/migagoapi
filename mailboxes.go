@@ -51,7 +51,7 @@ type Mailbox struct {
 	AutorespondSubject    string    `json:"autorespond_subject,omitempty"`
 	AutorespondBody       string    `json:"autorespond_body,omitempty"`
 	AutorespondExpiresOn  time.Time `json:"autorespond_expires_on,omitempty"`
-	FooterActive          string    `json:"footer_active,omitempty"`
+	FooterActive          bool      `json:"footer_active,omitempty"`
 	FooterPlainBody       string    `json:"footer_plain_body,omitempty"`
 	FooterHTMLBody        string    `json:"footer_html_body,omitempty"`
 	Identities            []string  `json:"identities,omitempty"`
@@ -143,4 +143,40 @@ func (c *Client) CreateMailboxWithInvite(
 	}
 
 	return c.CreateMailbox(ctx, &new_mailbox)
+}
+
+// Updates the mailbox local_part using the parametres in the provided Mailbox
+// Returns the updated Mailbox as a pointer and any errors
+func (c *Client) UpdateMailbox(ctx context.Context, local_part string, mailbox_params *Mailbox) (*Mailbox, error) {
+	var updated_mailbox Mailbox
+
+	url_slug := fmt.Sprintf("mailboxes/%s", local_part)
+
+	mailbox_body, err := json.Marshal(mailbox_params)
+	if err != nil {
+		return nil, fmt.Errorf("UpdateMailbox: %w", err)
+	}
+
+	body, err := c.Put(ctx, url_slug, mailbox_body)
+	if err != nil {
+		return nil, fmt.Errorf("UpdateMailbox: %w", err)
+	}
+
+	err = json.Unmarshal(body, &updated_mailbox)
+	if err != nil {
+		return nil, fmt.Errorf("UpdateMailbox: %w", err)
+	}
+
+	return &updated_mailbox, nil
+}
+
+func (c *Client) DeleteMailbox(ctx context.Context, local_part string) error {
+	url_slug := fmt.Sprintf("mailboxes/%s", local_part)
+
+	_, err := c.Delete(ctx, url_slug)
+	if err != nil {
+		return fmt.Errorf("DeleteMailbox: %w", err)
+	}
+
+	return nil
 }

@@ -44,9 +44,9 @@ type Mailbox struct {
 	PasswordRecoveryEmail string    `json:"password_recovery_email,omitempty"`
 	SpamAction            string    `json:"spam_action,omitempty"`
 	SpamAggressiveness    string    `json:"spam_aggressiveness"`
-	SenderDenylist        string    `json:"sender_denylist,omitempty"`
-	SenderAllowlist       string    `json:"sender_allowlist,omitempty"`
-	RecipientDenylist     string    `json:"recipient_denylist,omitempty"`
+	SenderDenylist        []string  `json:"sender_denylist,omitempty"`
+	SenderAllowlist       []string  `json:"sender_allowlist,omitempty"`
+	RecipientDenylist     []string  `json:"recipient_denylist,omitempty"`
 	AutorespondActive     bool      `json:"autorespond_active,omitempty"`
 	AutorespondSubject    string    `json:"autorespond_subject,omitempty"`
 	AutorespondBody       string    `json:"autorespond_body,omitempty"`

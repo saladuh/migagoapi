@@ -24,10 +24,6 @@ func (t *CustomTime) MarshalJSON() ([]byte, error) {
 	return []byte(time.Time(*t).Format(`"2006-01-02T15:04:05.000-0700"`)), nil
 }
 
-// TODO: if we're never marshaling into a mailbox struct,
-// then 'omitempty' tag is really unnecessary because it
-// does nothing when unmarshaling, only when marshaling is
-// it relevant
 type Mailbox struct {
 	LocalPart             string     `json:"local_part,omitempty"`
 	Domain                string     `json:"domain,omitempty"`

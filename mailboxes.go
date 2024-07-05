@@ -54,7 +54,7 @@ type Mailbox struct {
 }
 
 // Get all mailboxes on the domain associated with the client
-func (c *Client) GetMailboxes(ctx context.Context) (*[]Mailbox, error) {
+func (c *Client) GetMailboxes(ctx context.Context) ([]Mailbox, error) {
 	var mailboxes struct {
 		Mailboxes []Mailbox `json:"mailboxes,omitempty"`
 	}
@@ -69,7 +69,7 @@ func (c *Client) GetMailboxes(ctx context.Context) (*[]Mailbox, error) {
 		return nil, fmt.Errorf("GetMailboxes: %w", err)
 	}
 
-	return &mailboxes.Mailboxes, nil
+	return mailboxes.Mailboxes, nil
 }
 
 // Get mailbox local_part at domain associated with the client

@@ -23,7 +23,7 @@ type Identity struct {
 	FooterHtmlBody       string `json:"footer_html_body,omitempty"`
 }
 
-func (c *Client) GetIdentities(ctx context.Context, local_part string) (*[]Identity, error) {
+func (c *Client) GetIdentities(ctx context.Context, local_part string) ([]Identity, error) {
 	var identities struct {
 		Identities []Identity `json:"Identities,omitempty"`
 	}
@@ -38,7 +38,7 @@ func (c *Client) GetIdentities(ctx context.Context, local_part string) (*[]Ident
 		return nil, fmt.Errorf("GetIdentities: %w", err)
 	}
 
-	return &identities.Identities, nil
+	return identities.Identities, nil
 }
 
 func (c *Client) GetIdentity(ctx context.Context, local_part, id string) (*Identity, error) {

@@ -46,7 +46,7 @@ type Mailbox struct {
 	AutorespondActive     bool       `json:"autorespond_active,omitempty"`
 	AutorespondSubject    string     `json:"autorespond_subject,omitempty"`
 	AutorespondBody       string     `json:"autorespond_body,omitempty"`
-	AutorespondExpiresOn  CustomTime `json:"autorespond_expires_on,omitempty"`
+	AutorespondExpiresOn  string     `json:"autorespond_expires_on,omitempty"`
 	FooterActive          bool       `json:"footer_active,omitempty"`
 	FooterPlainBody       string     `json:"footer_plain_body,omitempty"`
 	FooterHTMLBody        string     `json:"footer_html_body,omitempty"`

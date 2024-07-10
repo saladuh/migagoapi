@@ -46,7 +46,7 @@ type Mailbox struct {
 	AutorespondActive     bool       `json:"autorespond_active,omitempty"`
 	AutorespondSubject    string     `json:"autorespond_subject,omitempty"`
 	AutorespondBody       string     `json:"autorespond_body,omitempty"`
-	AutorespondExpiresOn  time.Time  `json:"autorespond_expires_on,omitempty"`
+	AutorespondExpiresOn  CustomTime `json:"autorespond_expires_on,omitempty"`
 	FooterActive          bool       `json:"footer_active,omitempty"`
 	FooterPlainBody       string     `json:"footer_plain_body,omitempty"`
 	FooterHTMLBody        string     `json:"footer_html_body,omitempty"`
@@ -129,8 +129,7 @@ func (c *Client) CreateMailboxWithPassword(
 
 // Convience function to create a mailbox that sets the password via invitation link
 func (c *Client) CreateMailboxWithInvite(
-	ctx context.Context, name, local_part, password_recovery_email string,
-	is_internal bool) (*Mailbox, error) {
+	ctx context.Context, name, local_part, password_recovery_email string) (*Mailbox, error) {
 	new_mailbox := Mailbox{
 		Name:                  name,
 		LocalPart:             local_part,

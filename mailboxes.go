@@ -97,17 +97,17 @@ func (c *Client) CreateMailbox(ctx context.Context, new_mailbox *Mailbox) (*Mail
 
 	mailbox_body, err := json.Marshal(new_mailbox)
 	if err != nil {
-		return nil, fmt.Errorf("CreateMailbox: %w", err)
+		return nil, fmt.Errorf("CreateMailbox: When marshaling, %w", err)
 	}
 
 	body, err := c.Post(ctx, "mailboxes", mailbox_body)
 	if err != nil {
-		return nil, fmt.Errorf("CreateMailbox: %w", err)
+		return nil, fmt.Errorf("CreateMailbox: When posting, %w", err)
 	}
 
 	err = json.Unmarshal(body, &mailbox)
 	if err != nil {
-		return nil, fmt.Errorf("CreateMailbox: %w", err)
+		return nil, fmt.Errorf("CreateMailbox: When unmarshaling, %w", err)
 	}
 
 	return &mailbox, nil

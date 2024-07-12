@@ -29,33 +29,35 @@ func (e ErrorRequestStatus) Error() string {
 	return fmt.Sprintf("status code: %d, response body: %s", e.StatusCode, e.StatusBody)
 }
 
-// Timeout will be used as the client's timeout duration and will overrule
+// Returns a new migagoapi client to run requests with.
+
+// Timeout will be used as the client's http timeout duration and will overrule
 // any context timeout duration (if longer). When the timeout of the client
 // making the request is reached, it is treated as if the context of the
 // request has ended.
-func NewClient(user, token, endpoint, domain *string, timeout *time.Duration) (*Client, error) {
-	if user == nil {
+func NewClient(user, token, endpoint, domain string, timeout *time.Duration) (*Client, error) {
+	if user == "" {
 		return nil, errors.New("No username supplied.")
 	}
 
-	if token == nil {
+	if token == "" {
 		return nil, errors.New("No token supplied.")
 	}
 
-	if domain == nil {
+	if domain == "" {
 		return nil, errors.New("No domain supplied")
 	}
 
 	c := Client{
-		*user,
-		*token,
+		user,
+		token,
 		BaseEndpoint,
-		*domain,
+		domain,
 		&http.Client{Timeout: time.Duration(time.Second * 120)},
 	}
 
-	if endpoint != nil {
-		c.Endpoint = *endpoint
+	if endpoint != "" {
+		c.Endpoint = endpoint
 	}
 
 	if timeout != nil {

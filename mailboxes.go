@@ -73,10 +73,10 @@ func (c *Client) GetMailboxes(ctx context.Context) ([]Mailbox, error) {
 }
 
 // Get mailbox local_part at domain associated with the client
-func (c *Client) GetMailbox(ctx context.Context, local_part string) (*Mailbox, error) {
+func (c *Client) GetMailbox(ctx context.Context, localPart string) (*Mailbox, error) {
 	var mailbox Mailbox
 
-	url_slug := fmt.Sprintf("mailboxes/%s", local_part)
+	url_slug := fmt.Sprintf("mailboxes/%s", localPart)
 
 	body, err := c.Get(ctx, url_slug)
 	if err != nil {
@@ -92,15 +92,15 @@ func (c *Client) GetMailbox(ctx context.Context, local_part string) (*Mailbox, e
 }
 
 // Create mailbox using Mailbox object
-func (c *Client) CreateMailbox(ctx context.Context, new_mailbox *Mailbox) (*Mailbox, error) {
+func (c *Client) CreateMailbox(ctx context.Context, newMailbox *Mailbox) (*Mailbox, error) {
 	var mailbox Mailbox
 
-	mailbox_body, err := json.Marshal(new_mailbox)
+	mailboxBody, err := json.Marshal(newMailbox)
 	if err != nil {
 		return nil, fmt.Errorf("CreateMailbox: When marshaling, %w", err)
 	}
 
-	body, err := c.Post(ctx, "mailboxes", mailbox_body)
+	body, err := c.Post(ctx, "mailboxes", mailboxBody)
 	if err != nil {
 		return nil, fmt.Errorf("CreateMailbox: When posting, %w", err)
 	}
@@ -115,60 +115,60 @@ func (c *Client) CreateMailbox(ctx context.Context, new_mailbox *Mailbox) (*Mail
 
 // Convience function to create a mailbox with a password set
 func (c *Client) CreateMailboxWithPassword(
-	ctx context.Context, name, local_part, password string, is_internal bool) (*Mailbox, error) {
+	ctx context.Context, name, localPart, password string, isInternal bool) (*Mailbox, error) {
 
-	new_mailbox := Mailbox{
+	newMailbox := Mailbox{
 		Name:       name,
-		LocalPart:  local_part,
+		LocalPart:  localPart,
 		Password:   password,
-		IsInternal: is_internal,
+		IsInternal: isInternal,
 	}
 
-	return c.CreateMailbox(ctx, &new_mailbox)
+	return c.CreateMailbox(ctx, &newMailbox)
 }
 
 // Convience function to create a mailbox that sets the password via invitation link
 func (c *Client) CreateMailboxWithInvite(
-	ctx context.Context, name, local_part, password_recovery_email string) (*Mailbox, error) {
-	new_mailbox := Mailbox{
+	ctx context.Context, name, localPart, passwordRecoveryEmail string) (*Mailbox, error) {
+	newMailbox := Mailbox{
 		Name:                  name,
-		LocalPart:             local_part,
+		LocalPart:             localPart,
 		PasswordMethod:        "invitation",
-		PasswordRecoveryEmail: password_recovery_email,
+		PasswordRecoveryEmail: passwordRecoveryEmail,
 	}
 
-	return c.CreateMailbox(ctx, &new_mailbox)
+	return c.CreateMailbox(ctx, &newMailbox)
 }
 
 // Updates the mailbox local_part using the parametres in the provided Mailbox
 // Returns the updated Mailbox as a pointer and any errors
-func (c *Client) UpdateMailbox(ctx context.Context, local_part string, mailbox_params *Mailbox) (*Mailbox, error) {
-	var updated_mailbox Mailbox
+func (c *Client) UpdateMailbox(ctx context.Context, localPart string, mailboxParams *Mailbox) (*Mailbox, error) {
+	var updatedMailbox Mailbox
 
-	url_slug := fmt.Sprintf("mailboxes/%s", local_part)
+	urlSlug := fmt.Sprintf("mailboxes/%s", localPart)
 
-	mailbox_body, err := json.Marshal(mailbox_params)
+	mailbox_body, err := json.Marshal(mailboxParams)
 	if err != nil {
 		return nil, fmt.Errorf("UpdateMailbox: %w", err)
 	}
 
-	body, err := c.Put(ctx, url_slug, mailbox_body)
+	body, err := c.Put(ctx, urlSlug, mailbox_body)
 	if err != nil {
 		return nil, fmt.Errorf("UpdateMailbox: %w", err)
 	}
 
-	err = json.Unmarshal(body, &updated_mailbox)
+	err = json.Unmarshal(body, &updatedMailbox)
 	if err != nil {
 		return nil, fmt.Errorf("UpdateMailbox: %w", err)
 	}
 
-	return &updated_mailbox, nil
+	return &updatedMailbox, nil
 }
 
-func (c *Client) DeleteMailbox(ctx context.Context, local_part string) error {
-	url_slug := fmt.Sprintf("mailboxes/%s", local_part)
+func (c *Client) DeleteMailbox(ctx context.Context, localPart string) error {
+	urlSlug := fmt.Sprintf("mailboxes/%s", localPart)
 
-	_, err := c.Delete(ctx, url_slug)
+	_, err := c.Delete(ctx, urlSlug)
 	if err != nil {
 		return fmt.Errorf("DeleteMailbox: %w", err)
 	}

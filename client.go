@@ -71,12 +71,12 @@ func (c *Client) Get(ctx context.Context, path string) ([]byte, error) {
 	return c.commonMethod(ctx, path, http.NoBody, http.MethodGet)
 }
 
-func (c *Client) Post(ctx context.Context, path string, json_body []byte) ([]byte, error) {
-	return c.commonMethod(ctx, path, bytes.NewBuffer(json_body), http.MethodPost)
+func (c *Client) Post(ctx context.Context, path string, jsonBody []byte) ([]byte, error) {
+	return c.commonMethod(ctx, path, bytes.NewBuffer(jsonBody), http.MethodPost)
 }
 
-func (c *Client) Put(ctx context.Context, path string, json_body []byte) ([]byte, error) {
-	return c.commonMethod(ctx, path, bytes.NewBuffer(json_body), http.MethodPut)
+func (c *Client) Put(ctx context.Context, path string, jsonBody []byte) ([]byte, error) {
+	return c.commonMethod(ctx, path, bytes.NewBuffer(jsonBody), http.MethodPut)
 }
 
 func (c *Client) Delete(ctx context.Context, path string) ([]byte, error) {
@@ -85,10 +85,10 @@ func (c *Client) Delete(ctx context.Context, path string) ([]byte, error) {
 
 func (c *Client) commonMethod(
 	ctx context.Context, path string,
-	reader_body io.Reader, method string) ([]byte, error) {
+	readerBody io.Reader, method string) ([]byte, error) {
 	url := fmt.Sprintf("%s/domains/%s/%s", c.Endpoint, c.Domain, path)
 
-	req, err := http.NewRequestWithContext(ctx, method, url, reader_body)
+	req, err := http.NewRequestWithContext(ctx, method, url, readerBody)
 
 	if err != nil {
 		return nil, err
